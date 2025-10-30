@@ -112,7 +112,7 @@ function FormatChoiceContent() {
 
     if (customer.symphonie > 0 && totalSymphonie !== customer.symphonie) {
       setError(
-        `Vous devez répartir exactement ${customer.symphonie} pack(s) Symphonie des siècles.`
+        `Vous devez répartir exactement ${customer.symphonie} pack(s) Symphonie des Siècles.`
       );
       return;
     }
@@ -251,7 +251,7 @@ function FormatChoiceContent() {
                 )}
                 {customer.symphonie > 0 && (
                   <p>
-                    <span className="text-gray-500">Packs Symphonie des siècles :</span>{" "}
+                    <span className="text-gray-500">Packs Symphonie des Siècles :</span>{" "}
                     {customer.symphonie}
                   </p>
                 )}
@@ -341,7 +341,7 @@ function FormatChoiceContent() {
               </div>
             </div>
 
-            {/* CHOIX DU FORMAT - MÉLANCOLIE */}
+            {/* CHOIX DU SUPPORT - MÉLANCOLIE */}
             {customer.melancolie > 0 && (
               <div className="bg-gray-900 border border-gray-800 p-6 rounded mb-6">
                 <h3 className="text-gray-300 mb-4 uppercase text-xs">
@@ -389,7 +389,7 @@ function FormatChoiceContent() {
               </div>
             )}
 
-            {/* CHOIX DU FORMAT - SYMPHONIE */}
+            {/* CHOIX DU SUPPORT - SYMPHONIE */}
             {customer.symphonie > 0 && (
               <div className="bg-gray-900 border border-gray-800 p-6 rounded mb-6">
                 <h3 className="text-gray-300 mb-4 uppercase text-xs">

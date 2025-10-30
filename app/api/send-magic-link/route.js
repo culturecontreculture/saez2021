@@ -77,12 +77,12 @@ export async function POST(request) {
     const prenom = customer.prenomenvoi || "";
     const emailBody = `
       <div style="font-family: monospace; color: #e5e7eb; background-color: #000000; padding: 40px; text-align: center;">
-        <h1 style="color: #d1d5db; font-size: 12px; letter-spacing: 3px; margin-bottom: 30px;">SAEZ 2021 - CHOIX DU FORMAT</h1>
+        <h1 style="color: #d1d5db; font-size: 12px; letter-spacing: 3px; margin-bottom: 30px;">SAEZ 2021 - CHOIX DU SUPPORT</h1>
         
         ${prenom ? `<p style="font-size: 11px; margin-bottom: 20px;">Bonjour ${prenom},</p>` : ""}
         
         <p style="font-size: 11px; line-height: 1.6; margin-bottom: 30px;">
-          Vous avez acheté des packs Mélancolie et/ou Symphonie des siècles.<br/>
+          Vous avez acheté des packs Mélancolie et/ou Symphonie des Siècles.<br/>
           Cliquez sur le bouton ci-dessous pour vérifier votre adresse de livraison<br/>
           et choisir si vous souhaitez recevoir vos packs en CD ou en Vinyle.
         </p>
@@ -92,7 +92,7 @@ export async function POST(request) {
              style="display: inline-block; border: 1px solid #4b5563; color: #ffffff; 
                     padding: 12px 30px; text-decoration: none; font-size: 10px; 
                     letter-spacing: 2px; background-color: #1f2937;">
-            CONFIGURER MA COMMANDE
+            CHOISIR LE SUPPORT
           </a>
         </div>
         
@@ -120,7 +120,7 @@ export async function POST(request) {
             name: prenom ? `${prenom} ${customer.nomenvoi || ""}`.trim() : undefined,
           },
         ],
-        subject: "Saez 2021 - Choisissez le format de vos packs",
+        subject: "Saez 2021 - Choisissez le support de vos packs",
         htmlContent: emailBody,
       }),
     });
