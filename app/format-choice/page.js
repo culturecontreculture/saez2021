@@ -210,10 +210,10 @@ function FormatChoiceContent() {
                 d="M5 13l4 4L19 7"
               />
             </svg>
-            <p className="text-green-400 mb-4">CONFIGURATION ENREGISTRÉE</p>
+            <p className="text-green-400 mb-4">CHOIX ENREGISTRÉ</p>
             <p className="text-gray-400 text-xs normal-case">
               Vous recevrez un email de confirmation.<br />
-              Vos packs seront expédiés dans le format choisi<br />
+              Vos packs seront expédiés dans le support choisi<br />
               à l'adresse indiquée.
             </p>
           </div>
@@ -226,7 +226,7 @@ function FormatChoiceContent() {
     <div className="min-h-screen bg-black text-white text-xs p-4">
       <div className="max-w-2xl mx-auto pt-8 pb-16">
         <h1 className="mb-8 text-sm tracking-widest text-gray-400 text-center uppercase">
-          SAEZ 2021 - CONFIGURATION
+          SAEZ 2021 - CHOIX DU SUPPORT AUDIO
         </h1>
 
         {customer && (
@@ -255,6 +255,23 @@ function FormatChoiceContent() {
                     {customer.symphonie}
                   </p>
                 )}
+              </div>
+            </div>
+
+            {/* INFORMATIONS DÉLAIS */}
+            <div className="bg-amber-900 bg-opacity-20 border border-amber-800 p-6 rounded mb-6">
+              <h2 className="text-amber-400 mb-3 uppercase text-xs">
+                ⚠️ INFORMATIONS IMPORTANTES
+              </h2>
+              <div className="space-y-2 text-gray-300 text-xs normal-case leading-relaxed">
+                <p>• Les envois des lives à l'usine seront effectués <strong>fin novembre</strong>.</p>
+                <p>• Temps de fabrication usine <strong>CD</strong> : 2 mois (hors période Noël)<br/>
+                   → Expédition courant <strong>février</strong></p>
+                <p>• Temps de fabrication usine <strong>Vinyles</strong> : 4 mois (hors période Noël)<br/>
+                   → Expédition courant <strong>avril</strong></p>
+                <p className="text-amber-300 text-xs mt-3">
+                  ⚠️ Prévoir frais de port supplémentaires inhérents au poids des vinyles
+                </p>
               </div>
             </div>
 
@@ -450,11 +467,11 @@ function FormatChoiceContent() {
               disabled={saving}
               className="border border-gray-700 px-6 py-3 w-full hover:bg-gray-900 transition disabled:opacity-50 uppercase"
             >
-              {saving ? "ENREGISTREMENT..." : "VALIDER MA CONFIGURATION"}
+              {saving ? "ENREGISTREMENT..." : "VALIDER MON CHOIX"}
             </button>
 
             <p className="text-gray-600 text-xs text-center mt-6 normal-case">
-              Vous pourrez modifier votre configuration en demandant un nouveau lien.
+              Vous pourrez modifier votre choix en demandant un nouveau lien.
             </p>
           </>
         )}

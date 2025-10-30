@@ -92,7 +92,7 @@ export async function POST(request) {
              style="display: inline-block; border: 1px solid #4b5563; color: #ffffff; 
                     padding: 12px 30px; text-decoration: none; font-size: 10px; 
                     letter-spacing: 2px; background-color: #1f2937;">
-            CHOISIR LE SUPPORT
+            CHOIX DU SUPPORT AUDIO
           </a>
         </div>
         
@@ -120,7 +120,7 @@ export async function POST(request) {
             name: prenom ? `${prenom} ${customer.nomenvoi || ""}`.trim() : undefined,
           },
         ],
-        subject: "Saez 2021 - Choisissez le support de vos packs",
+        subject: "Saez 2021 - Choix du support audio",
         htmlContent: emailBody,
       }),
     });

@@ -194,19 +194,19 @@ export async function POST(request) {
         ${prenom ? `<p style="font-size: 11px; margin-bottom: 20px;">Bonjour ${prenom},</p>` : ""}
         
         <p style="font-size: 11px; line-height: 1.6; margin-bottom: 20px;">
-          Votre configuration a bien été enregistrée.
+          Votre choix a bien été enregistré.
         </p>
         
         <div style="background-color: #1f2937; border: 1px solid #374151; padding: 20px; margin: 30px auto; max-width: 400px; text-align: left;">
           <p style="font-size: 10px; color: #9ca3af; text-transform: uppercase; margin-bottom: 10px;">Adresse de livraison</p>
           ${recapAdresse}
           
-          <p style="font-size: 10px; color: #9ca3af; text-transform: uppercase; margin: 20px 0 10px 0;">Format choisi</p>
+          <p style="font-size: 10px; color: #9ca3af; text-transform: uppercase; margin: 20px 0 10px 0;">Support audio choisi</p>
           ${recapFormat}
         </div>
         
         <p style="font-size: 11px; line-height: 1.6; margin-top: 30px;">
-          Vos packs seront expédiés dans les formats choisis<br/>
+          Vos packs seront expédiés dans les supports choisis<br/>
           à l'adresse indiquée ci-dessus.
         </p>
         
@@ -233,7 +233,7 @@ export async function POST(request) {
             name: prenom ? `${prenom} ${customer.nomenvoi || ""}`.trim() : undefined,
           },
         ],
-        subject: "Saez 2021 - Confirmation de votre configuration",
+        subject: "Saez 2021 - Confirmation de votre choix",
         htmlContent: emailBody,
       }),
     });
