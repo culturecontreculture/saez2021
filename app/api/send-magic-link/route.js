@@ -87,6 +87,11 @@ export async function POST(request) {
           et choisir si vous souhaitez recevoir vos packs en CD ou en Vinyle.
         </p>
         
+        <p style="font-size: 10px; line-height: 1.6; margin-bottom: 20px; color: #fbbf24; background-color: #78350f; padding: 15px; border-radius: 5px;">
+          ⚠️ Vous pouvez encore changer d'avis jusqu'au <strong>28 novembre</strong>.<br/>
+          Après cette date, il ne sera plus possible de modifier le type de support audio.
+        </p>
+        
         <div style="margin: 40px 0;">
           <a href="${magicLink}" 
              style="display: inline-block; border: 1px solid #4b5563; color: #ffffff; 

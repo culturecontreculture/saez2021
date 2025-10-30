@@ -1,8 +1,8 @@
 import './globals.css'
 
 export const metadata = {
-  title: 'Apocalypse - Choix du format',
-  description: 'Choisissez le format de vos packs Mélancolie et Symphonie',
+  title: 'Saez 2021 - Choix du support audio',
+  description: 'Choisissez le support audio de vos packs Mélancolie et Symphonie des Siècles',
 }
 
 export default function RootLayout({ children }) {

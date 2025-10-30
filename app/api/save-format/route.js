@@ -210,6 +210,11 @@ export async function POST(request) {
           à l'adresse indiquée ci-dessus.
         </p>
         
+        <p style="font-size: 10px; line-height: 1.6; margin-top: 25px; color: #fbbf24; background-color: #78350f; padding: 15px; border-radius: 5px; max-width: 400px; margin-left: auto; margin-right: auto;">
+          ⏰ Vous pouvez encore changer d'avis jusqu'au <strong>28 novembre</strong>.<br/>
+          Après cette date, il ne sera plus possible de modifier le type de support audio.
+        </p>
+        
         <p style="font-size: 9px; color: #9ca3af; margin-top: 40px;">
           Pour toute question, contactez support@culturecontreculture.fr
         </p>

@@ -272,6 +272,10 @@ function FormatChoiceContent() {
                 <p className="text-amber-300 text-xs mt-3">
                   ⚠️ Prévoir frais de port supplémentaires inhérents au poids des vinyles
                 </p>
+                <p className="text-amber-200 font-bold text-xs mt-4 pt-3 border-t border-amber-800">
+                  ⏰ Vous pouvez encore changer d'avis jusqu'au <strong>28 novembre</strong>.<br/>
+                  Après cette date, il ne sera plus possible de modifier le type de support audio.
+                </p>
               </div>
             </div>
 
