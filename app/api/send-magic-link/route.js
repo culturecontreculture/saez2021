@@ -9,7 +9,7 @@ const supabase = createClient(
 
 const BREVO_API_KEY = process.env.BREVO_API_KEY;
 const SENDER_EMAIL = "support@culturecontreculture.fr";
-const SENDER_NAME = "Apocalypse";
+const SENDER_NAME = "Saez 2021";
 
 export async function POST(request) {
   try {
@@ -27,7 +27,7 @@ export async function POST(request) {
     // 1. Vérifier que l'email existe dans customers
     const { data: customer, error: customerError } = await supabase
       .from("customers")
-      .select("id, prenom, nom, melancolie, symphonie, email")
+      .select("id, prenomenvoi, nomenvoi, melancolie, symphonie, email")
       .eq("email", normalizedEmail)
       .single();
 
@@ -74,17 +74,17 @@ export async function POST(request) {
     const magicLink = `${baseUrl}/format-choice?token=${token}`;
 
     // 6. Envoyer l'email via Brevo
-    const prenom = customer.prenom || "";
+    const prenom = customer.prenomenvoi || "";
     const emailBody = `
       <div style="font-family: monospace; color: #e5e7eb; background-color: #000000; padding: 40px; text-align: center;">
-        <h1 style="color: #d1d5db; font-size: 12px; letter-spacing: 3px; margin-bottom: 30px;">APOCALYPSE - CHOIX DU FORMAT</h1>
+        <h1 style="color: #d1d5db; font-size: 12px; letter-spacing: 3px; margin-bottom: 30px;">SAEZ 2021 - CHOIX DU FORMAT</h1>
         
         ${prenom ? `<p style="font-size: 11px; margin-bottom: 20px;">Bonjour ${prenom},</p>` : ""}
         
         <p style="font-size: 11px; line-height: 1.6; margin-bottom: 30px;">
-          Vous avez acheté des packs Mélancolie et/ou Symphonie.<br/>
-          Cliquez sur le bouton ci-dessous pour choisir si vous souhaitez<br/>
-          recevoir vos packs en CD ou en Vinyle.
+          Vous avez acheté des packs Mélancolie et/ou Symphonie des siècles.<br/>
+          Cliquez sur le bouton ci-dessous pour vérifier votre adresse de livraison<br/>
+          et choisir si vous souhaitez recevoir vos packs en CD ou en Vinyle.
         </p>
         
         <div style="margin: 40px 0;">
@@ -92,7 +92,7 @@ export async function POST(request) {
              style="display: inline-block; border: 1px solid #4b5563; color: #ffffff; 
                     padding: 12px 30px; text-decoration: none; font-size: 10px; 
                     letter-spacing: 2px; background-color: #1f2937;">
-            CHOISIR MON FORMAT
+            CONFIGURER MA COMMANDE
           </a>
         </div>
         
@@ -117,10 +117,10 @@ export async function POST(request) {
         to: [
           {
             email: normalizedEmail,
-            name: prenom ? `${prenom} ${customer.nom || ""}`.trim() : undefined,
+            name: prenom ? `${prenom} ${customer.nomenvoi || ""}`.trim() : undefined,
           },
         ],
-        subject: "Apocalypse - Choisissez le format de vos packs",
+        subject: "Saez 2021 - Choisissez le format de vos packs",
         htmlContent: emailBody,
       }),
     });

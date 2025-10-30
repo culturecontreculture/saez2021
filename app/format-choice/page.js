@@ -14,7 +14,14 @@ function FormatChoiceContent() {
   const [saving, setSaving] = useState(false);
   const [success, setSuccess] = useState(false);
 
-  // Choix de l'utilisateur
+  // Adresse
+  const [adresse1, setAdresse1] = useState("");
+  const [adresse2, setAdresse2] = useState("");
+  const [codepostal, setCodepostal] = useState("");
+  const [ville, setVille] = useState("");
+  const [pays, setPays] = useState("");
+
+  // Choix de format
   const [melancolieCd, setMelancolieCd] = useState(0);
   const [melancolieVinyle, setMelancholieVinyle] = useState(0);
   const [symphonieCd, setSymphonieCd] = useState(0);
@@ -56,7 +63,14 @@ function FormatChoiceContent() {
 
       setCustomer(data.customer);
 
-      // Initialiser les valeurs par défaut si déjà rempli
+      // Initialiser l'adresse
+      setAdresse1(data.customer.adresse1 || "");
+      setAdresse2(data.customer.adresse2 || "");
+      setCodepostal(data.customer.codepostal || "");
+      setVille(data.customer.ville || "");
+      setPays(data.customer.pays || "France");
+
+      // Initialiser les valeurs de format si déjà rempli
       if (data.existingChoices && data.existingChoices.length > 0) {
         data.existingChoices.forEach((choice) => {
           if (choice.pack_type === "melancolie") {
@@ -79,7 +93,13 @@ function FormatChoiceContent() {
   };
 
   const handleSave = async () => {
-    // Validation
+    // Validation adresse
+    if (!adresse1.trim() || !codepostal.trim() || !ville.trim() || !pays.trim()) {
+      setError("Veuillez remplir tous les champs d'adresse obligatoires.");
+      return;
+    }
+
+    // Validation format
     const totalMelancolie = melancolieCd + melancolieVinyle;
     const totalSymphonie = symphonieCd + symphonieVinyle;
 
@@ -92,7 +112,7 @@ function FormatChoiceContent() {
 
     if (customer.symphonie > 0 && totalSymphonie !== customer.symphonie) {
       setError(
-        `Vous devez répartir exactement ${customer.symphonie} pack(s) Symphonie.`
+        `Vous devez répartir exactement ${customer.symphonie} pack(s) Symphonie des siècles.`
       );
       return;
     }
@@ -106,6 +126,13 @@ function FormatChoiceContent() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           token,
+          address: {
+            adresse1: adresse1.trim(),
+            adresse2: adresse2.trim(),
+            codepostal: codepostal.trim(),
+            ville: ville.trim(),
+            pays: pays.trim(),
+          },
           choices: {
             melancolie: {
               cd: melancolieCd,
@@ -148,11 +175,11 @@ function FormatChoiceContent() {
       <div className="flex items-center justify-center min-h-screen bg-black text-white text-xs uppercase">
         <div className="text-center max-w-md px-4">
           <h1 className="mb-6 text-sm tracking-widest text-gray-400">
-            APOCALYPSE
+            SAEZ 2021
           </h1>
           <p className="text-red-400 mb-6 normal-case">{error}</p>
           <button
-            onClick={() => router.push("/format-login")}
+            onClick={() => router.push("/")}
             className="border border-gray-700 px-4 py-2 hover:bg-gray-900 transition"
           >
             DEMANDER UN NOUVEAU LIEN
@@ -167,7 +194,7 @@ function FormatChoiceContent() {
       <div className="flex items-center justify-center min-h-screen bg-black text-white text-xs uppercase">
         <div className="text-center max-w-md px-4">
           <h1 className="mb-6 text-sm tracking-widest text-gray-400">
-            APOCALYPSE
+            SAEZ 2021
           </h1>
           <div className="mb-6">
             <svg
@@ -183,10 +210,11 @@ function FormatChoiceContent() {
                 d="M5 13l4 4L19 7"
               />
             </svg>
-            <p className="text-green-400 mb-4">CHOIX ENREGISTRÉ</p>
+            <p className="text-green-400 mb-4">CONFIGURATION ENREGISTRÉE</p>
             <p className="text-gray-400 text-xs normal-case">
               Vous recevrez un email de confirmation.<br />
-              Vos packs seront expédiés dans le format choisi.
+              Vos packs seront expédiés dans le format choisi<br />
+              à l'adresse indiquée.
             </p>
           </div>
         </div>
@@ -196,22 +224,23 @@ function FormatChoiceContent() {
 
   return (
     <div className="min-h-screen bg-black text-white text-xs p-4">
-      <div className="max-w-2xl mx-auto pt-8">
+      <div className="max-w-2xl mx-auto pt-8 pb-16">
         <h1 className="mb-8 text-sm tracking-widest text-gray-400 text-center uppercase">
-          APOCALYPSE - CHOIX DU FORMAT
+          SAEZ 2021 - CONFIGURATION
         </h1>
 
         {customer && (
           <>
+            {/* RÉCAPITULATIF */}
             <div className="bg-gray-900 border border-gray-800 p-6 rounded mb-6">
               <h2 className="text-gray-300 mb-4 uppercase text-xs">
                 RÉCAPITULATIF DE VOTRE COMMANDE
               </h2>
               <div className="space-y-2 text-gray-400">
-                {customer.prenom && (
+                {customer.prenomenvoi && (
                   <p className="normal-case">
                     <span className="text-gray-500">Nom :</span>{" "}
-                    {customer.prenom} {customer.nom}
+                    {customer.prenomenvoi} {customer.nomenvoi}
                   </p>
                 )}
                 {customer.melancolie > 0 && (
@@ -222,13 +251,97 @@ function FormatChoiceContent() {
                 )}
                 {customer.symphonie > 0 && (
                   <p>
-                    <span className="text-gray-500">Packs Symphonie :</span>{" "}
+                    <span className="text-gray-500">Packs Symphonie des siècles :</span>{" "}
                     {customer.symphonie}
                   </p>
                 )}
               </div>
             </div>
 
+            {/* ADRESSE DE LIVRAISON */}
+            <div className="bg-gray-900 border border-gray-800 p-6 rounded mb-6">
+              <h2 className="text-gray-300 mb-4 uppercase text-xs">
+                ADRESSE DE LIVRAISON
+              </h2>
+              <div className="space-y-4">
+                <div>
+                  <label className="block text-gray-500 mb-2 uppercase text-xs">
+                    Adresse *
+                  </label>
+                  <input
+                    type="text"
+                    value={adresse1}
+                    onChange={(e) => {
+                      setAdresse1(e.target.value);
+                      setError("");
+                    }}
+                    className="bg-black border border-gray-700 text-white p-2 w-full focus:border-gray-500 outline-none normal-case"
+                    placeholder="Numéro et nom de rue"
+                  />
+                </div>
+                <div>
+                  <label className="block text-gray-500 mb-2 uppercase text-xs">
+                    Complément d'adresse
+                  </label>
+                  <input
+                    type="text"
+                    value={adresse2}
+                    onChange={(e) => {
+                      setAdresse2(e.target.value);
+                      setError("");
+                    }}
+                    className="bg-black border border-gray-700 text-white p-2 w-full focus:border-gray-500 outline-none normal-case"
+                    placeholder="Appartement, bâtiment, etc."
+                  />
+                </div>
+                <div className="grid grid-cols-2 gap-4">
+                  <div>
+                    <label className="block text-gray-500 mb-2 uppercase text-xs">
+                      Code postal *
+                    </label>
+                    <input
+                      type="text"
+                      value={codepostal}
+                      onChange={(e) => {
+                        setCodepostal(e.target.value);
+                        setError("");
+                      }}
+                      className="bg-black border border-gray-700 text-white p-2 w-full focus:border-gray-500 outline-none"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-gray-500 mb-2 uppercase text-xs">
+                      Ville *
+                    </label>
+                    <input
+                      type="text"
+                      value={ville}
+                      onChange={(e) => {
+                        setVille(e.target.value);
+                        setError("");
+                      }}
+                      className="bg-black border border-gray-700 text-white p-2 w-full focus:border-gray-500 outline-none normal-case"
+                    />
+                  </div>
+                </div>
+                <div>
+                  <label className="block text-gray-500 mb-2 uppercase text-xs">
+                    Pays *
+                  </label>
+                  <input
+                    type="text"
+                    value={pays}
+                    onChange={(e) => {
+                      setPays(e.target.value);
+                      setError("");
+                    }}
+                    className="bg-black border border-gray-700 text-white p-2 w-full focus:border-gray-500 outline-none normal-case"
+                  />
+                </div>
+              </div>
+            </div>
+
+            {/* CHOIX DU FORMAT - MÉLANCOLIE */}
             {customer.melancolie > 0 && (
               <div className="bg-gray-900 border border-gray-800 p-6 rounded mb-6">
                 <h3 className="text-gray-300 mb-4 uppercase text-xs">
@@ -276,10 +389,11 @@ function FormatChoiceContent() {
               </div>
             )}
 
+            {/* CHOIX DU FORMAT - SYMPHONIE */}
             {customer.symphonie > 0 && (
               <div className="bg-gray-900 border border-gray-800 p-6 rounded mb-6">
                 <h3 className="text-gray-300 mb-4 uppercase text-xs">
-                  SYMPHONIE ({customer.symphonie} pack{customer.symphonie > 1 ? "s" : ""})
+                  SYMPHONIE DES SIÈCLES ({customer.symphonie} pack{customer.symphonie > 1 ? "s" : ""})
                 </h3>
                 <div className="space-y-4">
                   <div>
@@ -323,22 +437,24 @@ function FormatChoiceContent() {
               </div>
             )}
 
+            {/* MESSAGE D'ERREUR */}
             {error && (
               <div className="bg-red-900 border border-red-800 p-4 rounded mb-6 text-center">
                 <p className="text-red-200 text-xs">{error}</p>
               </div>
             )}
 
+            {/* BOUTON VALIDER */}
             <button
               onClick={handleSave}
               disabled={saving}
               className="border border-gray-700 px-6 py-3 w-full hover:bg-gray-900 transition disabled:opacity-50 uppercase"
             >
-              {saving ? "ENREGISTREMENT..." : "VALIDER MON CHOIX"}
+              {saving ? "ENREGISTREMENT..." : "VALIDER MA CONFIGURATION"}
             </button>
 
             <p className="text-gray-600 text-xs text-center mt-6 normal-case">
-              Vous pourrez modifier votre choix en demandant un nouveau lien.
+              Vous pourrez modifier votre configuration en demandant un nouveau lien.
             </p>
           </>
         )}

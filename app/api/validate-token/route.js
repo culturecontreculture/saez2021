@@ -46,7 +46,7 @@ export async function POST(request) {
     // 2. Récupérer les infos du customer
     const { data: customer, error: customerError } = await supabase
       .from("customers")
-      .select("id, prenom, nom, email, melancolie, symphonie, format_choice_completed")
+      .select("id, prenomenvoi, nomenvoi, email, melancolie, symphonie, format_choice_completed, adresse1, adresse2, codepostal, ville, pays")
       .eq("id", magicLink.customer_id)
       .single();
 
@@ -66,12 +66,17 @@ export async function POST(request) {
     return NextResponse.json({
       customer: {
         id: customer.id,
-        prenom: customer.prenom,
-        nom: customer.nom,
+        prenomenvoi: customer.prenomenvoi,
+        nomenvoi: customer.nomenvoi,
         email: customer.email,
         melancolie: customer.melancolie || 0,
         symphonie: customer.symphonie || 0,
         format_choice_completed: customer.format_choice_completed,
+        adresse1: customer.adresse1 || "",
+        adresse2: customer.adresse2 || "",
+        codepostal: customer.codepostal || "",
+        ville: customer.ville || "",
+        pays: customer.pays || "",
       },
       existingChoices: existingChoices || [],
       alreadyUsed,

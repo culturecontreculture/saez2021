@@ -8,13 +8,13 @@ const supabase = createClient(
 
 const BREVO_API_KEY = process.env.BREVO_API_KEY;
 const SENDER_EMAIL = "support@culturecontreculture.fr";
-const SENDER_NAME = "Apocalypse";
+const SENDER_NAME = "Saez 2021";
 
 export async function POST(request) {
   try {
-    const { token, choices } = await request.json();
+    const { token, choices, address } = await request.json();
 
-    if (!token || !choices) {
+    if (!token || !choices || !address) {
       return NextResponse.json(
         { error: "Données manquantes" },
         { status: 400 }
@@ -45,7 +45,7 @@ export async function POST(request) {
     // 2. Récupérer le customer
     const { data: customer, error: customerError } = await supabase
       .from("customers")
-      .select("id, prenom, nom, email, melancolie, symphonie")
+      .select("id, prenomenvoi, nomenvoi, email, melancolie, symphonie")
       .eq("id", magicLink.customer_id)
       .single();
 
@@ -56,13 +56,34 @@ export async function POST(request) {
       );
     }
 
-    // 3. Supprimer les anciens choix du client
+    // 3. Mettre à jour l'adresse du customer
+    const { error: updateAddressError } = await supabase
+      .from("customers")
+      .update({
+        adresse1: address.adresse1,
+        adresse2: address.adresse2 || null,
+        codepostal: address.codepostal,
+        ville: address.ville,
+        pays: address.pays,
+        date_update: new Date().toISOString(),
+      })
+      .eq("id", customer.id);
+
+    if (updateAddressError) {
+      console.error("Erreur mise à jour adresse:", updateAddressError);
+      return NextResponse.json(
+        { error: "Erreur lors de la mise à jour de l'adresse" },
+        { status: 500 }
+      );
+    }
+
+    // 4. Supprimer les anciens choix du client
     await supabase
       .from("format_choices")
       .delete()
       .eq("customer_id", customer.id);
 
-    // 4. Insérer les nouveaux choix
+    // 5. Insérer les nouveaux choix
     const formatChoices = [];
 
     if (choices.melancolie.cd > 0) {
@@ -115,7 +136,7 @@ export async function POST(request) {
       }
     }
 
-    // 5. Marquer le token comme utilisé et mettre à jour le customer
+    // 6. Marquer le token comme utilisé et mettre à jour le customer
     await supabase
       .from("magic_links")
       .update({ used: true })
@@ -129,49 +150,64 @@ export async function POST(request) {
       })
       .eq("id", customer.id);
 
-    // 6. Préparer le récap pour l'email
-    let recapText = "";
+    // 7. Préparer le récap pour l'email
+    let recapFormat = "";
     
     if (choices.melancolie.cd > 0 || choices.melancolie.vinyle > 0) {
-      recapText += "<p style='margin: 10px 0;'><strong>MÉLANCOLIE</strong><br/>";
+      recapFormat += "<p style='margin: 10px 0;'><strong>MÉLANCOLIE</strong><br/>";
       if (choices.melancolie.cd > 0) {
-        recapText += `${choices.melancolie.cd} en CD<br/>`;
+        recapFormat += `${choices.melancolie.cd} en CD<br/>`;
       }
       if (choices.melancolie.vinyle > 0) {
-        recapText += `${choices.melancolie.vinyle} en Vinyle<br/>`;
+        recapFormat += `${choices.melancolie.vinyle} en Vinyle<br/>`;
       }
-      recapText += "</p>";
+      recapFormat += "</p>";
     }
 
     if (choices.symphonie.cd > 0 || choices.symphonie.vinyle > 0) {
-      recapText += "<p style='margin: 10px 0;'><strong>SYMPHONIE</strong><br/>";
+      recapFormat += "<p style='margin: 10px 0;'><strong>SYMPHONIE DES SIÈCLES</strong><br/>";
       if (choices.symphonie.cd > 0) {
-        recapText += `${choices.symphonie.cd} en CD<br/>`;
+        recapFormat += `${choices.symphonie.cd} en CD<br/>`;
       }
       if (choices.symphonie.vinyle > 0) {
-        recapText += `${choices.symphonie.vinyle} en Vinyle<br/>`;
+        recapFormat += `${choices.symphonie.vinyle} en Vinyle<br/>`;
       }
-      recapText += "</p>";
+      recapFormat += "</p>";
     }
 
-    // 7. Envoyer l'email de confirmation
-    const prenom = customer.prenom || "";
+    // Préparer l'adresse pour l'email
+    const recapAdresse = `
+      <p style='margin: 10px 0; text-align: left;'>
+        ${address.adresse1}<br/>
+        ${address.adresse2 ? address.adresse2 + '<br/>' : ''}
+        ${address.codepostal} ${address.ville}<br/>
+        ${address.pays}
+      </p>
+    `;
+
+    // 8. Envoyer l'email de confirmation
+    const prenom = customer.prenomenvoi || "";
     const emailBody = `
       <div style="font-family: monospace; color: #e5e7eb; background-color: #000000; padding: 40px; text-align: center;">
-        <h1 style="color: #d1d5db; font-size: 12px; letter-spacing: 3px; margin-bottom: 30px;">APOCALYPSE - CONFIRMATION</h1>
+        <h1 style="color: #d1d5db; font-size: 12px; letter-spacing: 3px; margin-bottom: 30px;">SAEZ 2021 - CONFIRMATION</h1>
         
         ${prenom ? `<p style="font-size: 11px; margin-bottom: 20px;">Bonjour ${prenom},</p>` : ""}
         
         <p style="font-size: 11px; line-height: 1.6; margin-bottom: 20px;">
-          Votre choix de format a bien été enregistré.
+          Votre configuration a bien été enregistrée.
         </p>
         
         <div style="background-color: #1f2937; border: 1px solid #374151; padding: 20px; margin: 30px auto; max-width: 400px; text-align: left;">
-          ${recapText}
+          <p style="font-size: 10px; color: #9ca3af; text-transform: uppercase; margin-bottom: 10px;">Adresse de livraison</p>
+          ${recapAdresse}
+          
+          <p style="font-size: 10px; color: #9ca3af; text-transform: uppercase; margin: 20px 0 10px 0;">Format choisi</p>
+          ${recapFormat}
         </div>
         
         <p style="font-size: 11px; line-height: 1.6; margin-top: 30px;">
-          Vos packs seront expédiés dans les formats choisis.
+          Vos packs seront expédiés dans les formats choisis<br/>
+          à l'adresse indiquée ci-dessus.
         </p>
         
         <p style="font-size: 9px; color: #9ca3af; margin-top: 40px;">
@@ -194,17 +230,17 @@ export async function POST(request) {
         to: [
           {
             email: customer.email,
-            name: prenom ? `${prenom} ${customer.nom || ""}`.trim() : undefined,
+            name: prenom ? `${prenom} ${customer.nomenvoi || ""}`.trim() : undefined,
           },
         ],
-        subject: "Apocalypse - Confirmation de votre choix de format",
+        subject: "Saez 2021 - Confirmation de votre configuration",
         htmlContent: emailBody,
       }),
     });
 
     return NextResponse.json({ success: true });
   } catch (error) {
-    console.error("Erreur sauvegarde format:", error);
+    console.error("Erreur sauvegarde:", error);
     return NextResponse.json(
       { error: "Erreur serveur" },
       { status: 500 }

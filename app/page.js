@@ -34,7 +34,7 @@ export default function LoginPage() {
           );
         } else if (data.error === "NO_PACKS") {
           setMessage(
-            "Vous n'avez pas de packs Mélancolie ou Symphonie à configurer.\nPour toute question, contactez support@culturecontreculture.fr"
+            "Vous n'avez pas de packs Mélancolie ou Symphonie des siècles à configurer.\nPour toute question, contactez support@culturecontreculture.fr"
           );
         } else {
           setMessage("Une erreur s'est produite. Veuillez réessayer.");
@@ -64,11 +64,11 @@ export default function LoginPage() {
     <div className="flex items-center justify-center min-h-screen bg-black text-white text-xs uppercase">
       <div className="text-center max-w-md px-4">
         <h1 className="mb-6 text-sm tracking-widest text-gray-400">
-          SAEZ 2021 - CHOIX DU SUPPORT
+          SAEZ 2021 - CHOIX DU FORMAT
         </h1>
         <p className="mb-6 normal-case text-gray-300 text-xs">
           Entrez votre adresse email pour recevoir un lien de connexion et
-          choisir le format (CD ou Vinyle) de vos packs Mélancolie et Symphonie.
+          choisir le format (CD ou Vinyle) de vos packs Mélancolie et Symphonie des siècles.
         </p>
         <input
           type="email"
