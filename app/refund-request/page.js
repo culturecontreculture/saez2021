@@ -26,7 +26,7 @@ function RefundRequestContent() {
   const [bic, setBic] = useState("");
 
   // Date limite
-  const DATE_LIMITE = new Date("2024-11-22T23:59:59");
+  const DATE_LIMITE = new Date("2025-11-25T23:59:59");
   const isAfterDeadline = new Date() > DATE_LIMITE;
 
   useEffect(() => {
@@ -235,8 +235,8 @@ function RefundRequestContent() {
             {isAfterDeadline ? (
               <div className="bg-red-900 bg-opacity-20 border border-red-800 p-6 rounded mb-6 text-center">
                 <p className="text-red-400 text-xs">
-                  ⚠️ La date limite du 22 novembre est dépassée.<br/>
-                  Il n'est plus possible de modifier vos coordonnées.
+                  ⚠️ La date limite du 25 novembre est dépassée.<br/>
+                  Il n'est plus possible de demander un remboursement.
                 </p>
               </div>
             ) : (
@@ -245,8 +245,9 @@ function RefundRequestContent() {
                   ⚠️ IMPORTANT
                 </h2>
                 <p className="text-gray-300 text-xs normal-case">
-                  Vous pouvez encore modifier vos informations jusqu'au <strong>22 novembre</strong>.<br/>
-                  Après cette date, il ne sera plus possible de modifier vos coordonnées.
+                  Vous pouvez encore faire votre demande jusqu'au <strong>25 novembre</strong>.<br/>
+                  Après cette date, il ne sera plus possible de demander un remboursement.<br/>
+                  Le remboursement sera effectué le <strong>5 décembre</strong>.
                 </p>
               </div>
             )}
@@ -405,7 +406,7 @@ function RefundRequestContent() {
                 </button>
 
                 <p className="text-gray-600 text-xs text-center mt-6 normal-case">
-                  Vous pourrez modifier vos informations en demandant un nouveau lien jusqu'au 22 novembre.
+                  Vous pourrez modifier vos informations en demandant un nouveau lien jusqu'au 25 novembre.
                 </p>
               </>
             )}

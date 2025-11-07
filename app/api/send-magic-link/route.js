@@ -85,15 +85,9 @@ export async function POST(request) {
         ${prenom ? `<p style="font-size: 11px; margin-bottom: 20px;">Bonjour ${prenom},</p>` : ""}
         
         <p style="font-size: 11px; line-height: 1.6; margin-bottom: 20px;">
-          Suite à un imprévu, nous devons vous rembourser une partie de votre achat<br/>
+          Nous devons vous rembourser une partie de votre achat<br/>
           correspondant au disque qui ne pourra pas être livré.
         </p>
-        
-        <div style="background-color: #1f2937; border: 1px solid #374151; padding: 20px; margin: 20px auto; max-width: 400px;">
-          <p style="font-size: 14px; color: #10b981; font-weight: bold; margin: 0;">
-            Montant à rembourser : ${montantRemboursement}€
-          </p>
-        </div>
         
         <p style="font-size: 11px; line-height: 1.6; margin-bottom: 30px;">
           Cliquez sur le bouton ci-dessous pour renseigner vos coordonnées bancaires<br/>
@@ -101,8 +95,9 @@ export async function POST(request) {
         </p>
         
         <p style="font-size: 10px; line-height: 1.6; margin-bottom: 20px; color: #fbbf24; background-color: #78350f; padding: 15px; border-radius: 5px;">
-          ⚠️ Vous pouvez encore modifier vos informations jusqu'au <strong>22 novembre</strong>.<br/>
-          Après cette date, il ne sera plus possible de modifier vos coordonnées.
+          ⚠️ Vous pouvez encore faire votre demande jusqu'au <strong>25 novembre</strong>.<br/>
+          Après cette date, il ne sera plus possible de demander un remboursement.<br/>
+          Le remboursement sera effectué le <strong>5 décembre</strong>.
         </p>
         
         <div style="margin: 40px 0;">
@@ -110,7 +105,7 @@ export async function POST(request) {
              style="display: inline-block; border: 1px solid #4b5563; color: #ffffff; 
                     padding: 12px 30px; text-decoration: none; font-size: 10px; 
                     letter-spacing: 2px; background-color: #1f2937;">
-            RENSEIGNER MES COORDONNÉES
+            DEMANDER LE REMBOURSEMENT
           </a>
         </div>
         

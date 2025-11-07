@@ -159,8 +159,9 @@ export async function POST(request) {
         </div>
         
         <p style="font-size: 10px; line-height: 1.6; margin-top: 25px; color: #fbbf24; background-color: #78350f; padding: 15px; border-radius: 5px; max-width: 400px; margin-left: auto; margin-right: auto;">
-          ⏰ Vous pouvez encore modifier vos informations jusqu'au <strong>22 novembre</strong>.<br/>
-          Après cette date, il ne sera plus possible de modifier vos coordonnées.
+          ⏰ Vous pouvez encore modifier vos informations jusqu'au <strong>25 novembre</strong>.<br/>
+          Après cette date, il ne sera plus possible de demander un remboursement.<br/>
+          Le remboursement sera effectué le <strong>5 décembre</strong>.
         </p>
         
         <p style="font-size: 9px; color: #9ca3af; margin-top: 40px;">

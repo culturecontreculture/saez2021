@@ -39,14 +39,10 @@ export async function POST(request) {
       );
     }
 
-    // Vérifier si déjà utilisé (on autorise quand même l'accès pour modification)
-    // Mais on peut informer l'utilisateur
-    const alreadyUsed = magicLink.used;
-
     // 2. Récupérer les infos du customer
     const { data: customer, error: customerError } = await supabase
       .from("customers")
-      .select("id, prenomenvoi, nomenvoi, email, melancolie, symphonie, format_choice_completed, adresse1, adresse2, codepostal, ville, pays")
+      .select("id, prenomenvoi, nomenvoi, email, melancolie, symphonie, remboursement_demande, adresse1, adresse2, codepostal, ville, pays, iban, bic")
       .eq("id", magicLink.customer_id)
       .single();
 
@@ -57,11 +53,8 @@ export async function POST(request) {
       );
     }
 
-    // 3. Récupérer les choix existants s'il y en a
-    const { data: existingChoices } = await supabase
-      .from("format_choices")
-      .select("*")
-      .eq("customer_id", customer.id);
+    // 3. Calculer le montant du remboursement
+    const montantRemboursement = (customer.melancolie || 0) * 15 + (customer.symphonie || 0) * 15;
 
     return NextResponse.json({
       customer: {
@@ -71,15 +64,16 @@ export async function POST(request) {
         email: customer.email,
         melancolie: customer.melancolie || 0,
         symphonie: customer.symphonie || 0,
-        format_choice_completed: customer.format_choice_completed,
+        montantRemboursement,
+        remboursement_demande: customer.remboursement_demande,
         adresse1: customer.adresse1 || "",
         adresse2: customer.adresse2 || "",
         codepostal: customer.codepostal || "",
         ville: customer.ville || "",
-        pays: customer.pays || "",
+        pays: customer.pays || "France",
+        iban: customer.iban || "",
+        bic: customer.bic || "",
       },
-      existingChoices: existingChoices || [],
-      alreadyUsed,
     });
   } catch (error) {
     console.error("Erreur validation token:", error);
