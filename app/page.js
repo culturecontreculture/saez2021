@@ -2,7 +2,7 @@
 "use client";
 import { useState } from "react";
 
-export default function LoginPage() {
+export default function RefundLoginPage() {
   const [email, setEmail] = useState("");
   const [message, setMessage] = useState("");
   const [loading, setLoading] = useState(false);
@@ -17,7 +17,6 @@ export default function LoginPage() {
     try {
       const normalizedEmail = email.trim().toLowerCase();
 
-      // Appel à l'API pour envoyer le magic link
       const response = await fetch("/api/send-magic-link", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -34,7 +33,7 @@ export default function LoginPage() {
           );
         } else if (data.error === "NO_PACKS") {
           setMessage(
-            "Vous n'avez pas de packs Mélancolie ou Symphonie des Siècles à configurer.\nPour toute question, contactez support@culturecontreculture.fr"
+            "Vous n'avez pas de packs Mélancolie ou Symphonie des Siècles à rembourser.\nPour toute question, contactez support@culturecontreculture.fr"
           );
         } else {
           setMessage("Une erreur s'est produite. Veuillez réessayer.");
@@ -64,11 +63,12 @@ export default function LoginPage() {
     <div className="flex items-center justify-center min-h-screen bg-black text-white text-xs uppercase">
       <div className="text-center max-w-md px-4">
         <h1 className="mb-6 text-sm tracking-widest text-gray-400">
-          SAEZ 2021 - CHOIX DU SUPPORT
+          SAEZ 2021 - DEMANDE DE REMBOURSEMENT
         </h1>
         <p className="mb-6 normal-case text-gray-300 text-xs">
-          Entrez votre adresse email pour recevoir un lien de connexion et
-          choisir le support (CD ou Vinyle) de vos packs Mélancolie et Symphonie des Siècles.
+          Suite à un imprévu, nous devons vous rembourser une partie de votre achat.<br/>
+          Entrez votre adresse email pour recevoir un lien de connexion et<br/>
+          renseigner vos coordonnées bancaires pour le remboursement.
         </p>
         <input
           type="email"

@@ -10,11 +10,23 @@ const BREVO_API_KEY = process.env.BREVO_API_KEY;
 const SENDER_EMAIL = "support@culturecontreculture.fr";
 const SENDER_NAME = "Saez 2021";
 
+// Validation IBAN basique (format général)
+function validateIBAN(iban) {
+  const ibanRegex = /^[A-Z]{2}[0-9]{2}[A-Z0-9]{1,30}$/;
+  return ibanRegex.test(iban.replace(/\s/g, ''));
+}
+
+// Validation BIC basique
+function validateBIC(bic) {
+  const bicRegex = /^[A-Z]{6}[A-Z0-9]{2}([A-Z0-9]{3})?$/;
+  return bicRegex.test(bic.replace(/\s/g, ''));
+}
+
 export async function POST(request) {
   try {
-    const { token, choices, address } = await request.json();
+    const { token, address, bankDetails } = await request.json();
 
-    if (!token || !choices || !address) {
+    if (!token || !address || !bankDetails) {
       return NextResponse.json(
         { error: "Données manquantes" },
         { status: 400 }
@@ -56,8 +68,29 @@ export async function POST(request) {
       );
     }
 
-    // 3. Mettre à jour l'adresse du customer
-    const { error: updateAddressError } = await supabase
+    // 3. Valider IBAN et BIC
+    const ibanClean = bankDetails.iban.replace(/\s/g, '').toUpperCase();
+    const bicClean = bankDetails.bic.replace(/\s/g, '').toUpperCase();
+
+    if (!validateIBAN(ibanClean)) {
+      return NextResponse.json(
+        { error: "Format IBAN invalide" },
+        { status: 400 }
+      );
+    }
+
+    if (!validateBIC(bicClean)) {
+      return NextResponse.json(
+        { error: "Format BIC invalide" },
+        { status: 400 }
+      );
+    }
+
+    // 4. Calculer le montant du remboursement
+    const montantRemboursement = (customer.melancolie || 0) * 15 + (customer.symphonie || 0) * 15;
+
+    // 5. Mettre à jour le customer avec toutes les infos
+    const { error: updateError } = await supabase
       .from("customers")
       .update({
         adresse1: address.adresse1,
@@ -65,117 +98,30 @@ export async function POST(request) {
         codepostal: address.codepostal,
         ville: address.ville,
         pays: address.pays,
+        iban: ibanClean,
+        bic: bicClean,
+        remboursement_demande: true,
+        remboursement_date: new Date().toISOString(),
+        montant_remboursement: montantRemboursement,
         date_update: new Date().toISOString(),
       })
       .eq("id", customer.id);
 
-    if (updateAddressError) {
-      console.error("Erreur mise à jour adresse:", updateAddressError);
+    if (updateError) {
+      console.error("Erreur mise à jour customer:", updateError);
       return NextResponse.json(
-        { error: "Erreur lors de la mise à jour de l'adresse" },
+        { error: "Erreur lors de la sauvegarde" },
         { status: 500 }
       );
     }
 
-    // 4. Supprimer les anciens choix du client
-    await supabase
-      .from("format_choices")
-      .delete()
-      .eq("customer_id", customer.id);
-
-    // 5. Insérer les nouveaux choix
-    const formatChoices = [];
-
-    if (choices.melancolie.cd > 0) {
-      formatChoices.push({
-        customer_id: customer.id,
-        pack_type: "melancolie",
-        format: "cd",
-        quantite: choices.melancolie.cd,
-      });
-    }
-
-    if (choices.melancolie.vinyle > 0) {
-      formatChoices.push({
-        customer_id: customer.id,
-        pack_type: "melancolie",
-        format: "vinyle",
-        quantite: choices.melancolie.vinyle,
-      });
-    }
-
-    if (choices.symphonie.cd > 0) {
-      formatChoices.push({
-        customer_id: customer.id,
-        pack_type: "symphonie",
-        format: "cd",
-        quantite: choices.symphonie.cd,
-      });
-    }
-
-    if (choices.symphonie.vinyle > 0) {
-      formatChoices.push({
-        customer_id: customer.id,
-        pack_type: "symphonie",
-        format: "vinyle",
-        quantite: choices.symphonie.vinyle,
-      });
-    }
-
-    if (formatChoices.length > 0) {
-      const { error: insertError } = await supabase
-        .from("format_choices")
-        .insert(formatChoices);
-
-      if (insertError) {
-        console.error("Erreur insertion format_choices:", insertError);
-        return NextResponse.json(
-          { error: "Erreur lors de la sauvegarde" },
-          { status: 500 }
-        );
-      }
-    }
-
-    // 6. Marquer le token comme utilisé et mettre à jour le customer
+    // 6. Marquer le token comme utilisé
     await supabase
       .from("magic_links")
       .update({ used: true })
       .eq("token", token);
 
-    await supabase
-      .from("customers")
-      .update({
-        format_choice_completed: true,
-        format_choice_date: new Date().toISOString(),
-      })
-      .eq("id", customer.id);
-
-    // 7. Préparer le récap pour l'email
-    let recapFormat = "";
-    
-    if (choices.melancolie.cd > 0 || choices.melancolie.vinyle > 0) {
-      recapFormat += "<p style='margin: 10px 0;'><strong>MÉLANCOLIE</strong><br/>";
-      if (choices.melancolie.cd > 0) {
-        recapFormat += `${choices.melancolie.cd} en CD<br/>`;
-      }
-      if (choices.melancolie.vinyle > 0) {
-        recapFormat += `${choices.melancolie.vinyle} en Vinyle<br/>`;
-      }
-      recapFormat += "</p>";
-    }
-
-    if (choices.symphonie.cd > 0 || choices.symphonie.vinyle > 0) {
-      recapFormat += "<p style='margin: 10px 0;'><strong>SYMPHONIE DES SIÈCLES</strong><br/>";
-      if (choices.symphonie.cd > 0) {
-        recapFormat += `${choices.symphonie.cd} en CD<br/>`;
-      }
-      if (choices.symphonie.vinyle > 0) {
-        recapFormat += `${choices.symphonie.vinyle} en Vinyle<br/>`;
-      }
-      recapFormat += "</p>";
-    }
-
-    // Préparer l'adresse pour l'email
+    // 7. Préparer l'adresse pour l'email
     const recapAdresse = `
       <p style='margin: 10px 0; text-align: left;'>
         ${address.adresse1}<br/>
@@ -194,25 +140,27 @@ export async function POST(request) {
         ${prenom ? `<p style="font-size: 11px; margin-bottom: 20px;">Bonjour ${prenom},</p>` : ""}
         
         <p style="font-size: 11px; line-height: 1.6; margin-bottom: 20px;">
-          Votre choix a bien été enregistré.
+          Votre demande de remboursement a bien été enregistrée.
         </p>
         
         <div style="background-color: #1f2937; border: 1px solid #374151; padding: 20px; margin: 30px auto; max-width: 400px; text-align: left;">
-          <p style="font-size: 10px; color: #9ca3af; text-transform: uppercase; margin-bottom: 10px;">Adresse de livraison</p>
+          <p style="font-size: 14px; color: #10b981; font-weight: bold; margin-bottom: 15px; text-align: center;">
+            Montant : ${montantRemboursement}€
+          </p>
+          
+          <p style="font-size: 10px; color: #9ca3af; text-transform: uppercase; margin-bottom: 10px;">Adresse postale</p>
           ${recapAdresse}
           
-          <p style="font-size: 10px; color: #9ca3af; text-transform: uppercase; margin: 20px 0 10px 0;">Support audio choisi</p>
-          ${recapFormat}
+          <p style="font-size: 10px; color: #9ca3af; text-transform: uppercase; margin: 20px 0 10px 0;">Coordonnées bancaires</p>
+          <p style='margin: 10px 0; text-align: left; font-size: 11px;'>
+            IBAN : ${ibanClean.replace(/(.{4})/g, '$1 ').trim()}<br/>
+            BIC : ${bicClean}
+          </p>
         </div>
         
-        <p style="font-size: 11px; line-height: 1.6; margin-top: 30px;">
-          Vos packs seront expédiés dans les supports choisis<br/>
-          à l'adresse indiquée ci-dessus.
-        </p>
-        
         <p style="font-size: 10px; line-height: 1.6; margin-top: 25px; color: #fbbf24; background-color: #78350f; padding: 15px; border-radius: 5px; max-width: 400px; margin-left: auto; margin-right: auto;">
-          ⏰ Vous pouvez encore changer d'avis jusqu'au <strong>28 novembre</strong>.<br/>
-          Après cette date, il ne sera plus possible de modifier le type de support audio.
+          ⏰ Vous pouvez encore modifier vos informations jusqu'au <strong>22 novembre</strong>.<br/>
+          Après cette date, il ne sera plus possible de modifier vos coordonnées.
         </p>
         
         <p style="font-size: 9px; color: #9ca3af; margin-top: 40px;">
@@ -238,14 +186,14 @@ export async function POST(request) {
             name: prenom ? `${prenom} ${customer.nomenvoi || ""}`.trim() : undefined,
           },
         ],
-        subject: "Saez 2021 - Confirmation de votre choix",
+        subject: "Saez 2021 - Confirmation de votre demande de remboursement",
         htmlContent: emailBody,
       }),
     });
 
     return NextResponse.json({ success: true });
   } catch (error) {
-    console.error("Erreur sauvegarde:", error);
+    console.error("Erreur sauvegarde remboursement:", error);
     return NextResponse.json(
       { error: "Erreur serveur" },
       { status: 500 }

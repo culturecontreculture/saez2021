@@ -1,8 +1,8 @@
 import './globals.css'
 
 export const metadata = {
-  title: 'Saez 2021 - Choix du support audio',
-  description: 'Choisissez le support audio de vos packs Mélancolie et Symphonie des Siècles',
+  title: 'Saez 2021 - Demande de remboursement',
+  description: 'Demande de remboursement pour les packs Mélancolie et Symphonie des Siècles',
 }
 
 export default function RootLayout({ children }) {

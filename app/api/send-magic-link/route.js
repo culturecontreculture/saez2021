@@ -47,11 +47,14 @@ export async function POST(request) {
       );
     }
 
-    // 3. Générer un token unique
+    // 3. Calculer le montant du remboursement
+    const montantRemboursement = (customer.melancolie || 0) * 15 + (customer.symphonie || 0) * 15;
+
+    // 4. Générer un token unique
     const token = crypto.randomBytes(32).toString("hex");
     const expiresAt = new Date(Date.now() + 24 * 60 * 60 * 1000); // 24h
 
-    // 4. Enregistrer le token dans magic_links
+    // 5. Enregistrer le token dans magic_links
     const { error: insertError } = await supabase
       .from("magic_links")
       .insert({
@@ -69,27 +72,37 @@ export async function POST(request) {
       );
     }
 
-    // 5. Construire le lien magique
+    // 6. Construire le lien magique
     const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || request.headers.get("origin");
-    const magicLink = `${baseUrl}/format-choice?token=${token}`;
+    const magicLink = `${baseUrl}/refund-request?token=${token}`;
 
-    // 6. Envoyer l'email via Brevo
+    // 7. Envoyer l'email via Brevo
     const prenom = customer.prenomenvoi || "";
     const emailBody = `
       <div style="font-family: monospace; color: #e5e7eb; background-color: #000000; padding: 40px; text-align: center;">
-        <h1 style="color: #d1d5db; font-size: 12px; letter-spacing: 3px; margin-bottom: 30px;">SAEZ 2021 - CHOIX DU SUPPORT</h1>
+        <h1 style="color: #d1d5db; font-size: 12px; letter-spacing: 3px; margin-bottom: 30px;">SAEZ 2021 - DEMANDE DE REMBOURSEMENT</h1>
         
         ${prenom ? `<p style="font-size: 11px; margin-bottom: 20px;">Bonjour ${prenom},</p>` : ""}
         
+        <p style="font-size: 11px; line-height: 1.6; margin-bottom: 20px;">
+          Suite à un imprévu, nous devons vous rembourser une partie de votre achat<br/>
+          correspondant au disque qui ne pourra pas être livré.
+        </p>
+        
+        <div style="background-color: #1f2937; border: 1px solid #374151; padding: 20px; margin: 20px auto; max-width: 400px;">
+          <p style="font-size: 14px; color: #10b981; font-weight: bold; margin: 0;">
+            Montant à rembourser : ${montantRemboursement}€
+          </p>
+        </div>
+        
         <p style="font-size: 11px; line-height: 1.6; margin-bottom: 30px;">
-          Vous avez acheté des packs Mélancolie et/ou Symphonie des Siècles.<br/>
-          Cliquez sur le bouton ci-dessous pour vérifier votre adresse de livraison<br/>
-          et choisir si vous souhaitez recevoir vos packs en CD ou en Vinyle.
+          Cliquez sur le bouton ci-dessous pour renseigner vos coordonnées bancaires<br/>
+          et votre adresse postale afin de recevoir votre remboursement.
         </p>
         
         <p style="font-size: 10px; line-height: 1.6; margin-bottom: 20px; color: #fbbf24; background-color: #78350f; padding: 15px; border-radius: 5px;">
-          ⚠️ Vous pouvez encore changer d'avis jusqu'au <strong>28 novembre</strong>.<br/>
-          Après cette date, il ne sera plus possible de modifier le type de support audio.
+          ⚠️ Vous pouvez encore modifier vos informations jusqu'au <strong>22 novembre</strong>.<br/>
+          Après cette date, il ne sera plus possible de modifier vos coordonnées.
         </p>
         
         <div style="margin: 40px 0;">
@@ -97,7 +110,7 @@ export async function POST(request) {
              style="display: inline-block; border: 1px solid #4b5563; color: #ffffff; 
                     padding: 12px 30px; text-decoration: none; font-size: 10px; 
                     letter-spacing: 2px; background-color: #1f2937;">
-            CHOIX DU SUPPORT AUDIO
+            RENSEIGNER MES COORDONNÉES
           </a>
         </div>
         
@@ -125,7 +138,7 @@ export async function POST(request) {
             name: prenom ? `${prenom} ${customer.nomenvoi || ""}`.trim() : undefined,
           },
         ],
-        subject: "Saez 2021 - Choix du support audio",
+        subject: "Saez 2021 - Demande de remboursement",
         htmlContent: emailBody,
       }),
     });
