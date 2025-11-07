@@ -147,20 +147,10 @@ export async function POST(request) {
           <p style="font-size: 14px; color: #10b981; font-weight: bold; margin-bottom: 15px; text-align: center;">
             Montant : ${montantRemboursement}€
           </p>
-          
-          <p style="font-size: 10px; color: #9ca3af; text-transform: uppercase; margin-bottom: 10px;">Adresse postale</p>
-          ${recapAdresse}
-          
-          <p style="font-size: 10px; color: #9ca3af; text-transform: uppercase; margin: 20px 0 10px 0;">Coordonnées bancaires</p>
-          <p style='margin: 10px 0; text-align: left; font-size: 11px;'>
-            IBAN : ${ibanClean.replace(/(.{4})/g, '$1 ').trim()}<br/>
-            BIC : ${bicClean}
-          </p>
         </div>
         
         <p style="font-size: 10px; line-height: 1.6; margin-top: 25px; color: #fbbf24; background-color: #78350f; padding: 15px; border-radius: 5px; max-width: 400px; margin-left: auto; margin-right: auto;">
           ⏰ Vous pouvez encore modifier vos informations jusqu'au <strong>25 novembre</strong>.<br/>
-          Après cette date, il ne sera plus possible de demander un remboursement.<br/>
           Le remboursement sera effectué le <strong>5 décembre</strong>.
         </p>
         

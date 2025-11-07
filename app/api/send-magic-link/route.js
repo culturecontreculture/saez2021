@@ -84,19 +84,12 @@ export async function POST(request) {
         
         ${prenom ? `<p style="font-size: 11px; margin-bottom: 20px;">Bonjour ${prenom},</p>` : ""}
         
-        <p style="font-size: 11px; line-height: 1.6; margin-bottom: 20px;">
-          Nous devons vous rembourser une partie de votre achat<br/>
-          correspondant au disque qui ne pourra pas être livré.
-        </p>
-        
         <p style="font-size: 11px; line-height: 1.6; margin-bottom: 30px;">
-          Cliquez sur le bouton ci-dessous pour renseigner vos coordonnées bancaires<br/>
-          et votre adresse postale afin de recevoir votre remboursement.
+          Cliquez sur le bouton ci-dessous pour renseigner vos coordonnées bancaires afin de recevoir votre remboursement.
         </p>
         
         <p style="font-size: 10px; line-height: 1.6; margin-bottom: 20px; color: #fbbf24; background-color: #78350f; padding: 15px; border-radius: 5px;">
-          ⚠️ Vous pouvez encore faire votre demande jusqu'au <strong>25 novembre</strong>.<br/>
-          Après cette date, il ne sera plus possible de demander un remboursement.<br/>
+          ⚠️ Vous pouvez faire votre demande jusqu'au <strong>25 novembre</strong>.<br/>
           Le remboursement sera effectué le <strong>5 décembre</strong>.
         </p>
         

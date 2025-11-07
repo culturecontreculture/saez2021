@@ -66,7 +66,6 @@ export default function RefundLoginPage() {
           SAEZ 2021 - DEMANDE DE REMBOURSEMENT
         </h1>
         <p className="mb-6 normal-case text-gray-300 text-xs">
-          Nous devons vous rembourser une partie de votre achat.<br/>
           Entrez votre adresse email pour recevoir un lien de connexion et<br/>
           renseigner vos coordonnées bancaires pour le remboursement.
         </p>
