@@ -183,8 +183,7 @@ function RefundRequestContent() {
             <p className="text-green-400 mb-4">DEMANDE ENREGISTRÉE</p>
             <p className="text-gray-400 text-xs normal-case">
               Vous recevrez un email de confirmation.<br />
-              Votre remboursement de {customer.montantRemboursement}€ sera effectué<br />
-              dans les meilleurs délais.
+              Votre remboursement de {customer.montantRemboursement}€ sera effectué le 5 décembre.
             </p>
           </div>
         </div>
@@ -215,13 +214,13 @@ function RefundRequestContent() {
                 )}
                 {customer.melancolie > 0 && (
                   <p>
-                    <span className="text-gray-500">Packs Mélancolie :</span>{" "}
+                    <span className="text-gray-500">Pack(s) Mélancolie :</span>{" "}
                     {customer.melancolie} × 15€
                   </p>
                 )}
                 {customer.symphonie > 0 && (
                   <p>
-                    <span className="text-gray-500">Packs Symphonie des Siècles :</span>{" "}
+                    <span className="text-gray-500">Pack(s) Symphonie des siècles :</span>{" "}
                     {customer.symphonie} × 15€
                   </p>
                 )}
@@ -246,7 +245,6 @@ function RefundRequestContent() {
                 </h2>
                 <p className="text-gray-300 text-xs normal-case">
                   Vous pouvez encore faire votre demande jusqu'au <strong>25 novembre</strong>.<br/>
-                  Après cette date, il ne sera plus possible de demander un remboursement.<br/>
                   Le remboursement sera effectué le <strong>5 décembre</strong>.
                 </p>
               </div>
