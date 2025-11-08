@@ -22,11 +22,13 @@ export async function GET(request) {
       );
     }
 
-    // 1. Récupérer tous les customers avec des packs
+    // 1. Récupérer tous les customers avec remboursement_demande = true
     const { data: allCustomers, error: allError } = await supabase
       .from("customers")
       .select("melancolie, symphonie, remboursement_demande, montant_remboursement, remboursement_date")
-      .or("melancolie.gt.0,symphonie.gt.0");
+      .eq("remboursement_demande", true);
+
+    console.log("Customers avec demande trouvés:", allCustomers?.length);
 
     if (allError) {
       console.error("Erreur récupération customers:", allError);
@@ -36,35 +38,34 @@ export async function GET(request) {
       );
     }
 
-    // 2. Calculer les statistiques (uniquement demandes reçues)
+    // 2. Calculer les statistiques
     let montantTraite = 0;
-    let demandesRecues = 0;
+    let demandesRecues = allCustomers?.length || 0;
     
     let melancolieAvecDemande = 0;
     let symphonieAvecDemande = 0;
 
     const dernieresDemandes = [];
 
-    allCustomers.forEach((customer) => {
+    allCustomers?.forEach((customer) => {
       const mel = customer.melancolie || 0;
       const symp = customer.symphonie || 0;
-      const montant = (mel * 15) + (symp * 15);
+      
+      // Utiliser montant_remboursement si disponible, sinon calculer
+      const montant = parseFloat(customer.montant_remboursement) || ((mel * 15) + (symp * 15));
 
-      if (customer.remboursement_demande) {
-        demandesRecues++;
-        montantTraite += customer.montant_remboursement || montant;
-        melancolieAvecDemande += mel;
-        symphonieAvecDemande += symp;
+      montantTraite += montant;
+      melancolieAvecDemande += mel;
+      symphonieAvecDemande += symp;
 
-        // Ajouter aux dernières demandes
-        if (customer.remboursement_date) {
-          dernieresDemandes.push({
-            date: customer.remboursement_date,
-            montant: customer.montant_remboursement || montant,
-            melancolie: mel,
-            symphonie: symp,
-          });
-        }
+      // Ajouter aux dernières demandes
+      if (customer.remboursement_date) {
+        dernieresDemandes.push({
+          date: customer.remboursement_date,
+          montant: montant,
+          melancolie: mel,
+          symphonie: symp,
+        });
       }
     });
 
@@ -74,9 +75,11 @@ export async function GET(request) {
     // 3. Calculer le montant moyen
     const montantMoyen = demandesRecues > 0 ? Math.round(montantTraite / demandesRecues) : 0;
 
+    console.log("Stats calculées:", { montantTraite, demandesRecues, montantMoyen });
+
     // 4. Retourner les stats
     return NextResponse.json({
-      montantTraite,
+      montantTraite: Math.round(montantTraite),
       demandesRecues,
       montantMoyen,
       packsDetails: {
@@ -87,7 +90,7 @@ export async function GET(request) {
           avecDemande: symphonieAvecDemande,
         },
       },
-      dernieresDemandes: dernieresDemandes.slice(0, 10), // 10 dernières
+      dernieresDemandes: dernieresDemandes.slice(0, 10),
     });
   } catch (error) {
     console.error("Erreur serveur:", error);
