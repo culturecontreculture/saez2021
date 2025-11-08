@@ -105,80 +105,37 @@ export default function AdminRefundsPage() {
         ) : stats ? (
           <>
             {/* STATISTIQUES GLOBALES */}
-            <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
               <div className="bg-gray-900 border border-gray-800 p-6 rounded text-center">
-                <p className="text-gray-500 mb-2 uppercase text-xs">Total à rembourser</p>
-                <p className="text-3xl font-bold text-green-400">{stats.totalMontant.toLocaleString('fr-FR')}€</p>
+                <p className="text-gray-500 mb-2 uppercase text-xs">Montant total demandé</p>
+                <p className="text-3xl font-bold text-green-400">{stats.montantTraite.toLocaleString('fr-FR')}€</p>
               </div>
               <div className="bg-gray-900 border border-gray-800 p-6 rounded text-center">
-                <p className="text-gray-500 mb-2 uppercase text-xs">Demandes reçues</p>
+                <p className="text-gray-500 mb-2 uppercase text-xs">Nombre de demandes</p>
                 <p className="text-3xl font-bold text-blue-400">{stats.demandesRecues}</p>
               </div>
               <div className="bg-gray-900 border border-gray-800 p-6 rounded text-center">
-                <p className="text-gray-500 mb-2 uppercase text-xs">En attente</p>
-                <p className="text-3xl font-bold text-amber-400">{stats.enAttente}</p>
-              </div>
-              <div className="bg-gray-900 border border-gray-800 p-6 rounded text-center">
-                <p className="text-gray-500 mb-2 uppercase text-xs">Taux de réponse</p>
-                <p className="text-3xl font-bold text-purple-400">{stats.tauxReponse}%</p>
-              </div>
-            </div>
-
-            {/* MONTANTS DÉTAILLÉS */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
-              <div className="bg-gray-900 border border-gray-800 p-6 rounded">
-                <h2 className="text-gray-300 mb-4 uppercase text-xs border-b border-gray-700 pb-2">
-                  Remboursements traités
-                </h2>
-                <div className="space-y-2">
-                  <div className="flex justify-between">
-                    <span className="text-gray-500">Montant traité :</span>
-                    <span className="text-green-400 font-bold">{stats.montantTraite.toLocaleString('fr-FR')}€</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-gray-500">Nombre de demandes :</span>
-                    <span className="text-gray-300">{stats.demandesRecues}</span>
-                  </div>
-                </div>
-              </div>
-
-              <div className="bg-gray-900 border border-gray-800 p-6 rounded">
-                <h2 className="text-gray-300 mb-4 uppercase text-xs border-b border-gray-700 pb-2">
-                  En attente de demande
-                </h2>
-                <div className="space-y-2">
-                  <div className="flex justify-between">
-                    <span className="text-gray-500">Montant restant :</span>
-                    <span className="text-amber-400 font-bold">{stats.montantEnAttente.toLocaleString('fr-FR')}€</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-gray-500">Clients n'ayant pas répondu :</span>
-                    <span className="text-gray-300">{stats.enAttente}</span>
-                  </div>
-                </div>
+                <p className="text-gray-500 mb-2 uppercase text-xs">Montant moyen</p>
+                <p className="text-3xl font-bold text-purple-400">{stats.montantMoyen}€</p>
               </div>
             </div>
 
             {/* RÉPARTITION PAR PACK */}
             <div className="bg-gray-900 border border-gray-800 p-6 rounded mb-8">
               <h2 className="text-gray-300 mb-4 uppercase text-xs border-b border-gray-700 pb-2">
-                Répartition par pack
+                Répartition des demandes par pack
               </h2>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
                   <h3 className="text-gray-400 mb-3 text-xs">MÉLANCOLIE</h3>
                   <div className="space-y-2">
                     <div className="flex justify-between">
-                      <span className="text-gray-500">Total packs :</span>
-                      <span className="text-gray-300">{stats.packsDetails.melancolie.total}</span>
-                    </div>
-                    <div className="flex justify-between">
-                      <span className="text-gray-500">Avec demande :</span>
+                      <span className="text-gray-500">Packs avec demande :</span>
                       <span className="text-blue-400">{stats.packsDetails.melancolie.avecDemande}</span>
                     </div>
                     <div className="flex justify-between">
                       <span className="text-gray-500">Montant total :</span>
-                      <span className="text-green-400">{(stats.packsDetails.melancolie.total * 15).toLocaleString('fr-FR')}€</span>
+                      <span className="text-green-400">{(stats.packsDetails.melancolie.avecDemande * 15).toLocaleString('fr-FR')}€</span>
                     </div>
                   </div>
                 </div>
@@ -186,16 +143,12 @@ export default function AdminRefundsPage() {
                   <h3 className="text-gray-400 mb-3 text-xs">SYMPHONIE DES SIÈCLES</h3>
                   <div className="space-y-2">
                     <div className="flex justify-between">
-                      <span className="text-gray-500">Total packs :</span>
-                      <span className="text-gray-300">{stats.packsDetails.symphonie.total}</span>
-                    </div>
-                    <div className="flex justify-between">
-                      <span className="text-gray-500">Avec demande :</span>
+                      <span className="text-gray-500">Packs avec demande :</span>
                       <span className="text-blue-400">{stats.packsDetails.symphonie.avecDemande}</span>
                     </div>
                     <div className="flex justify-between">
                       <span className="text-gray-500">Montant total :</span>
-                      <span className="text-green-400">{(stats.packsDetails.symphonie.total * 15).toLocaleString('fr-FR')}€</span>
+                      <span className="text-green-400">{(stats.packsDetails.symphonie.avecDemande * 15).toLocaleString('fr-FR')}€</span>
                     </div>
                   </div>
                 </div>

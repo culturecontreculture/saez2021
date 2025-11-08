@@ -36,15 +36,10 @@ export async function GET(request) {
       );
     }
 
-    // 2. Calculer les statistiques
-    let totalMontant = 0;
+    // 2. Calculer les statistiques (uniquement demandes reçues)
     let montantTraite = 0;
-    let montantEnAttente = 0;
     let demandesRecues = 0;
-    let enAttente = 0;
     
-    let totalMelancolie = 0;
-    let totalSymphonie = 0;
     let melancolieAvecDemande = 0;
     let symphonieAvecDemande = 0;
 
@@ -54,10 +49,6 @@ export async function GET(request) {
       const mel = customer.melancolie || 0;
       const symp = customer.symphonie || 0;
       const montant = (mel * 15) + (symp * 15);
-
-      totalMontant += montant;
-      totalMelancolie += mel;
-      totalSymphonie += symp;
 
       if (customer.remboursement_demande) {
         demandesRecues++;
@@ -74,34 +65,25 @@ export async function GET(request) {
             symphonie: symp,
           });
         }
-      } else {
-        enAttente++;
-        montantEnAttente += montant;
       }
     });
 
     // Trier les dernières demandes par date décroissante
     dernieresDemandes.sort((a, b) => new Date(b.date) - new Date(a.date));
 
-    // 3. Calculer le taux de réponse
-    const totalClients = allCustomers.length;
-    const tauxReponse = totalClients > 0 ? Math.round((demandesRecues / totalClients) * 100) : 0;
+    // 3. Calculer le montant moyen
+    const montantMoyen = demandesRecues > 0 ? Math.round(montantTraite / demandesRecues) : 0;
 
     // 4. Retourner les stats
     return NextResponse.json({
-      totalMontant,
       montantTraite,
-      montantEnAttente,
       demandesRecues,
-      enAttente,
-      tauxReponse,
+      montantMoyen,
       packsDetails: {
         melancolie: {
-          total: totalMelancolie,
           avecDemande: melancolieAvecDemande,
         },
         symphonie: {
-          total: totalSymphonie,
           avecDemande: symphonieAvecDemande,
         },
       },
