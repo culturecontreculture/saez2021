@@ -64,8 +64,9 @@ export default function RefundLoginPage() {
       <div className="text-center max-w-md px-4">
         <h1 className="mb-6 text-sm tracking-widest text-gray-400">
           SAEZ 2021
-        </h1><br>
-         <h1 className="mb-6 text-sm tracking-widest text-gray-400">
+        </h1>
+        <br />
+        <h1 className="mb-6 text-sm tracking-widest text-gray-400">
           DEMANDE DE REMBOURSEMENT DES DISQUES
         </h1>
         <p className="mb-6 normal-case text-gray-300 text-xs">
