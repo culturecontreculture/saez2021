@@ -7,7 +7,7 @@ const supabase = createClient(
 );
 
 // Mot de passe admin (même que dans la page)
-const ADMIN_PASSWORD = "Saez2021Admin";
+const ADMIN_PASSWORD = "S@ez2021@dmin";
 
 export async function GET(request) {
   try {
