@@ -33,7 +33,7 @@ export default function RefundLoginPage() {
           );
         } else if (data.error === "NO_PACKS") {
           setMessage(
-            "Vous n'avez pas de packs Mélancolie ou Symphonie des Siècles à rembourser.\nPour toute question, contactez support@culturecontreculture.fr"
+            "Vous n'avez pas d'offre Mélancolie ou Symphonie des Siècles à rembourser.\nPour toute question, contactez support@culturecontreculture.fr"
           );
         } else {
           setMessage("Une erreur s'est produite. Veuillez réessayer.");

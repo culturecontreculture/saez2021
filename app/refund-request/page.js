@@ -195,7 +195,7 @@ function RefundRequestContent() {
     <div className="min-h-screen bg-black text-white text-xs p-4">
       <div className="max-w-2xl mx-auto pt-8 pb-16">
         <h1 className="mb-8 text-sm tracking-widest text-gray-400 text-center uppercase">
-          SAEZ 2021 - DEMANDE DE REMBOURSEMENT
+          SAEZ 2021 - DEMANDE DE REMBOURSEMENT DES DISQUES
         </h1>
 
         {customer && (
@@ -214,13 +214,13 @@ function RefundRequestContent() {
                 )}
                 {customer.melancolie > 0 && (
                   <p>
-                    <span className="text-gray-500">Pack(s) Mélancolie :</span>{" "}
+                    <span className="text-gray-500">Offre Mélancolie, remboursement du double disque :</span>{" "}
                     {customer.melancolie} × 15€
                   </p>
                 )}
                 {customer.symphonie > 0 && (
                   <p>
-                    <span className="text-gray-500">Pack(s) Symphonie des siècles :</span>{" "}
+                    <span className="text-gray-500">Offre Symphonie des siècles, remboursement du double disque :</span>{" "}
                     {customer.symphonie} × 15€
                   </p>
                 )}

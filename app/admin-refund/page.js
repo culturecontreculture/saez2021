@@ -10,7 +10,7 @@ export default function AdminRefundsPage() {
   const [loading, setLoading] = useState(false);
 
   // Mot de passe (à changer dans le code ou mettre en variable d'environnement)
-  const ADMIN_PASSWORD = "Saez2021Admin";
+  const ADMIN_PASSWORD = "S@ez2021@dmin";
 
   const handleLogin = () => {
     if (password === ADMIN_PASSWORD) {
