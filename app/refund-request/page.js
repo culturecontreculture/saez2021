@@ -203,7 +203,7 @@ function RefundRequestContent() {
             {/* RÉCAPITULATIF */}
             <div className="bg-gray-900 border border-gray-800 p-6 rounded mb-6">
               <h2 className="text-gray-300 mb-4 uppercase text-xs">
-                RÉCAPITULATIF DE VOTRE COMMANDE
+                RÉCAPITULATIF
               </h2>
               <div className="space-y-2 text-gray-400">
                 {customer.prenomenvoi && (

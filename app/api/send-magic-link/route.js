@@ -80,7 +80,7 @@ export async function POST(request) {
     const prenom = customer.prenomenvoi || "";
     const emailBody = `
       <div style="font-family: monospace; color: #e5e7eb; background-color: #000000; padding: 40px; text-align: center;">
-        <h1 style="color: #d1d5db; font-size: 12px; letter-spacing: 3px; margin-bottom: 30px;">SAEZ 2021 - DEMANDE DE REMBOURSEMENT</h1>
+        <h1 style="color: #d1d5db; font-size: 12px; letter-spacing: 3px; margin-bottom: 30px;">SAEZ 2021 - DEMANDE DE REMBOURSEMENT DES DISQUES</h1>
         
         ${prenom ? `<p style="font-size: 11px; margin-bottom: 20px;">Bonjour ${prenom},</p>` : ""}
         
@@ -126,7 +126,7 @@ export async function POST(request) {
             name: prenom ? `${prenom} ${customer.nomenvoi || ""}`.trim() : undefined,
           },
         ],
-        subject: "Saez 2021 - Demande de remboursement",
+        subject: "Saez 2021 - Demande de remboursement des disques",
         htmlContent: emailBody,
       }),
     });
